@@ -55,8 +55,16 @@ class MACrossStrategy(bt.Strategy):
         elif self.crossdown[-1] == 1:
             self.direction = "short"
 
-        long_entry = self.direction == "long" and self.position.size <= 0
-        short_entry = self.direction == "short" and self.position.size >= 0
+        long_entry = (
+            self.direction == "long"
+            and self.data.close[-1] > self.short_ma[-1] > self.long_ma[-1]
+            and self.position.size <= 0
+        )
+        short_entry = (
+            self.direction == "short"
+            and self.data.close[-1] < self.short_ma[-1] < self.long_ma[-1]
+            and self.position.size >= 0
+        )
 
         long_exit = self.crossdown[-1] == 1 and self.position.size > 0
         short_exit = self.crossup[-1] == 1 and self.position.size < 0
